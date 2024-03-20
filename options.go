@@ -495,3 +495,59 @@ const (
 	PageSizeLetter    = "Letter"    //	8.5 x 11 inches, 215.9 x 279.4 mm
 	PageSizeTabloid   = "Tabloid"   //	279.4 x 431.8 mm
 )
+
+// imageOptions represent the options to generate the image.
+type imageOptions struct {
+	// Input is the content to turn into an image. REQUIRED
+	//
+	// Can be a url (http://example.com), a local file (/tmp/example.html), or html as a string (send "-" and set the Html value)
+	//Input stringOption
+	// Format is the type of image to generate
+	//
+	// jpg, png, svg, bmp supported. Defaults to local wkhtmltoimage default
+	Format stringOption
+	// Height is the height of the screen used to render in pixels.
+	//
+	// Default is calculated from page content. Default 0 (renders entire page top to bottom)
+	Height uintOption
+	// Width is the width of the screen used to render in pixels.
+	//
+	// Note that this is used only as a guide line. Default 1024
+	Width uintOption
+	// Quality determines the final image quality.
+	//
+	// Values supported between 1 and 100. Default is 94
+	Quality uintOption
+	// Html is a string of html to render into and image.
+	//
+	// Only needed to be set if Input is set to "-"
+	//Html stringOption
+
+	Version boolOption // Output version information and exit
+
+	Quiet boolOption // Be less verbose
+
+	CropH uintOption // Set height for cropping
+	CropW uintOption // Set width for cropping
+	CropX uintOption // Set x coordinate for cropping
+	CropY uintOption // Set y coordinate for cropping
+}
+
+func (gopt *imageOptions) Args() []string {
+	return optsToArgs(gopt)
+}
+
+func newImageOptions() imageOptions {
+	return imageOptions{
+		Format:  stringOption{option: "format", value: "png"},
+		Height:  uintOption{option: "height"},
+		Width:   uintOption{option: "width"},
+		Quality: uintOption{option: "quality"},
+		Version: boolOption{option: "version"},
+		Quiet:   boolOption{option: "quiet"},
+		CropH:   uintOption{option: "crop-h"},
+		CropW:   uintOption{option: "crop-w"},
+		CropX:   uintOption{option: "crop-x"},
+		CropY:   uintOption{option: "crop-y"},
+	}
+}

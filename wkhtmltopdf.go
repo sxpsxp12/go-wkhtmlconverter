@@ -32,16 +32,16 @@ func (ss *stringStore) Set(s string) {
 	ss.Unlock()
 }
 
-var binPath stringStore
+var pdfBinPath stringStore
 
-// SetPath sets the path to wkhtmltopdf
-func SetPath(path string) {
-	binPath.Set(path)
+// SetPdfPath sets the path to wkhtmltopdf
+func SetPdfPath(path string) {
+	pdfBinPath.Set(path)
 }
 
-// GetPath gets the path to wkhtmltopdf
-func GetPath() string {
-	return binPath.Get()
+// GetPdfPath gets the path to wkhtmltopdf
+func GetPdfPath() string {
+	return pdfBinPath.Get()
 }
 
 // Page is the input struct for each page
@@ -255,7 +255,7 @@ var lookPath = exec.LookPath
 // a running program once it has been found
 func (pdfg *PDFGenerator) findPath() error {
 	const exe = "wkhtmltopdf"
-	pdfg.binPath = GetPath()
+	pdfg.binPath = GetPdfPath()
 	if pdfg.binPath != "" {
 		// wkhtmltopdf has already been found, return
 		return nil
@@ -266,7 +266,7 @@ func (pdfg *PDFGenerator) findPath() error {
 	}
 	path, err := lookPath(filepath.Join(exeDir, exe))
 	if err == nil && path != "" {
-		binPath.Set(path)
+		pdfBinPath.Set(path)
 		pdfg.binPath = path
 		return nil
 	}
@@ -275,7 +275,7 @@ func (pdfg *PDFGenerator) findPath() error {
 		return err
 	}
 	if err == nil && path != "" {
-		binPath.Set(path)
+		pdfBinPath.Set(path)
 		pdfg.binPath = path
 		return nil
 	}
@@ -288,7 +288,7 @@ func (pdfg *PDFGenerator) findPath() error {
 		return err
 	}
 	if err == nil && path != "" {
-		binPath.Set(path)
+		pdfBinPath.Set(path)
 		pdfg.binPath = path
 		return nil
 	}
@@ -383,7 +383,7 @@ func NewPDFGenerator() (*PDFGenerator, error) {
 
 // NewPDFPreparer returns a PDFGenerator object without looking for the wkhtmltopdf executable file.
 // This is useful to prepare a PDF file that is generated elsewhere and you just want to save the config as JSON.
-// Note that Create() can not be called on this object unless you call SetPath yourself.
+// Note that Create() can not be called on this object unless you call SetPdfPath yourself.
 func NewPDFPreparer() *PDFGenerator {
 	return &PDFGenerator{
 		globalOptions:  newGlobalOptions(),

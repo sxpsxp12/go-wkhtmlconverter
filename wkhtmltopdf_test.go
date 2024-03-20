@@ -258,10 +258,10 @@ func TestSetFooter(t *testing.T) {
 
 func TestPath(t *testing.T) {
 	path := "/usr/wkhtmltopdf/wkhtmltopdf"
-	SetPath(path)
-	defer SetPath("")
-	if GetPath() != path {
-		t.Errorf("Have path %q, want %q", GetPath(), path)
+	SetPdfPath(path)
+	defer SetPdfPath("")
+	if GetPdfPath() != path {
+		t.Errorf("Have path %q, want %q", GetPdfPath(), path)
 	}
 }
 
@@ -462,7 +462,7 @@ func TestFindPath(t *testing.T) {
 		return file, nil
 	}
 
-	binPath.Set("")
+	pdfBinPath.Set("")
 	err := pdfgen.findPath()
 	assert.NoError(t, err)
 
@@ -474,10 +474,10 @@ func TestFindPath(t *testing.T) {
 		return "", errors.New("mock error")
 	}
 
-	binPath.Set("")
+	pdfBinPath.Set("")
 	err = pdfgen.findPath()
 	assert.NoError(t, err)
-	assert.Equal(t, "wkhtmltopdf", binPath.Get())
+	assert.Equal(t, "wkhtmltopdf", pdfBinPath.Get())
 
 	// lookpath returns exec.ErrDot when called with "wkhtmltopdf"
 	lookPath = func(file string) (string, error) {
@@ -487,7 +487,7 @@ func TestFindPath(t *testing.T) {
 		return "", errors.New("mock error")
 	}
 
-	binPath.Set("")
+	pdfBinPath.Set("")
 	err = pdfgen.findPath()
 	assert.Error(t, err)
 	assert.EqualError(t, err, exec.ErrDot.Error())
@@ -502,7 +502,7 @@ func TestFindPath(t *testing.T) {
 		return "", errors.New("mock error")
 	}
 
-	binPath.Set("")
+	pdfBinPath.Set("")
 	err = pdfgen.findPath()
 	assert.NoError(t, err)
 
@@ -514,7 +514,7 @@ func TestFindPath(t *testing.T) {
 		return "", errors.New("mock error")
 	}
 
-	binPath.Set("")
+	pdfBinPath.Set("")
 	err = pdfgen.findPath()
 	assert.Error(t, err)
 	assert.EqualError(t, err, exec.ErrDot.Error())
@@ -525,7 +525,7 @@ func TestFindPath(t *testing.T) {
 		return "", errors.New("mock error")
 	}
 
-	binPath.Set("")
+	pdfBinPath.Set("")
 	err = pdfgen.findPath()
 	assert.Error(t, err)
 	assert.EqualError(t, err, "wkhtmltopdf not found")
@@ -536,7 +536,7 @@ func TestFindPath(t *testing.T) {
 		return "", errors.New("mock error")
 	}
 
-	binPath.Set("")
+	pdfBinPath.Set("")
 	err = pdfgen.findPath()
 	assert.Error(t, err)
 	assert.EqualError(t, err, "wkhtmltopdf not found")
