@@ -49,7 +49,7 @@ For us this is one of the easiest ways to generate PDF documents from Go(lang) a
 go get or use a Go dependency manager of your liking.
 
 ```
-go get -u github.com/SebastiaanKlippert/go-wkhtmltopdf
+go get -u github.com/sxpsxp12/go-wkhtmlconverter
 ```
 
 go-wkhtmltopdf finds the path to wkhtmltopdf by
