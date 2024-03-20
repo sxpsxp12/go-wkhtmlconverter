@@ -1,4 +1,4 @@
-module github.com/SebastiaanKlippert/go-wkhtmltopdf
+module github.com/sxpsxp12/go-wkhtmlconverter
 
 go 1.19
 
