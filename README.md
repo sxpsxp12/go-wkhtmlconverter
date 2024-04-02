@@ -1,49 +1,13 @@
-[![PkgGoDev](https://pkg.go.dev/badge/github.com/sxpsxp12/go-wkhtmlconverter)](https://pkg.go.dev/github.com/sxpsxp12/go-wkhtmlconverter)
-[![Go Report Card](https://goreportcard.com/badge/SebastiaanKlippert/go-wkhtmltopdf)](https://goreportcard.com/report/SebastiaanKlippert/go-wkhtmltopdf)
-[![codebeat badge](https://codebeat.co/badges/a6bb7f66-7ae2-4de8-8b61-623ef68096c9)](https://codebeat.co/projects/github-com-sebastiaanklippert-go-wkhtmltopdf-master)
-[![codecov](https://codecov.io/gh/SebastiaanKlippert/go-wkhtmltopdf/branch/master/graph/badge.svg)](https://codecov.io/gh/SebastiaanKlippert/go-wkhtmltopdf)
+fork from https://github.com/SebastiaanKlippert/go-wkhtmltopdf
+Thanks SebastiaanKlippert for providing inspiration
 
-[![Build Status](https://github.com/sxpsxp12/go-wkhtmlconverter/actions/workflows/ubuntu.yml/badge.svg?branch=master)](https://github.com/sxpsxp12/go-wkhtmlconverter/actions/workflows/ubuntu.yml)
-[![Build Status](https://github.com/sxpsxp12/go-wkhtmlconverter/actions/workflows/macos.yml/badge.svg?branch=master)](https://github.com/sxpsxp12/go-wkhtmlconverter/actions/workflows/macos.yml)
+# go-wkhtmlconverter
+Golang commandline wrapper for wkhtmltopdf and wkhtmltoimage
 
-# go-wkhtmltopdf
-Golang commandline wrapper for wkhtmltopdf
+go-wkhtmlconverter is a pure Golang wrapper around the wkhtmltopdf and wkhtmltoimage command line utility.
+
 
 See http://wkhtmltopdf.org/index.html for wkhtmltopdf docs.
-
-| :warning: WARNING          |
-|:---------------------------|
-| wkhtmltopdf is no longer maintained and now archived on GitHub. See https://wkhtmltopdf.org/status.html |
-| This go package is still maintained and will be for a while, but I recommend looking for alternatives for new projects. |
-
-
-# What and why
-We needed a way to generate PDF documents from Go. These vary from invoices with highly customizable lay-outs to reports with tables, graphs and images. In our opinion the best way to do this was by using HTML/CSS templates as source for our PDFs. Using CSS print media types and millimeters instead of pixel units we can generate very acurate PDF documents using wkhtmltopdf.
-
-go-wkhtmltopdf is a pure Golang wrapper around the wkhtmltopdf command line utility.
-
-It has all options typed out as struct members which makes it very easy to use if you use an IDE with
-code completion and it has type safety for all options.
-For example you can set general options like
-```go
-pdfg.Dpi.Set(600)
-pdfg.NoCollate.Set(false)
-pdfg.PageSize.Set(PageSizeA4)
-pdfg.MarginBottom.Set(40)
-``` 
-The same goes for adding pages, settings page options, TOC options per page etc.
-
-It takes care of setting the correct order of options as these can become very long with muliple pages where 
-you have page and TOC options for each page.
-
-Secondly it makes usage in server-type applications easier, every instance (PDF process) has its own output buffer 
-which contains the PDF output and you can feed one input document from an io.Reader (using stdin in wkhtmltopdf).
-You can combine any number of external HTML documents (HTTP(S) links) with at most one HTML document from stdin and set 
-options for each input document.
-
-Note: You can also ignore the internal buffer and let wkhtmltopdf write directly to disk if required for large files, or use the [SetOutput](https://godoc.org/github.com/sxpsxp12/go-wkhtmlconverter#PDFGenerator.SetOutput) method to pass any `io.Writer`.
-
-For us this is one of the easiest ways to generate PDF documents from Go(lang) and performance is very acceptable.
 
 # Installation
 go get or use a Go dependency manager of your liking.
@@ -57,15 +21,21 @@ go-wkhtmltopdf finds the path to wkhtmltopdf by
 * looking in the PATH and PATHEXT environment dirs
 * using the WKHTMLTOPDF_PATH environment dir
 
+go-wkhtmltoimage finds the path to wkhtmltopdf by
+* first looking in the current dir
+* looking in the PATH and PATHEXT environment dirs
+* using the WKHTMLTOIMAGE_PATH environment dir
+
 **Warning**: Running executables from the current path is no longer possible in Go 1.19, see https://pkg.go.dev/os/exec@master#hdr-Executables_in_the_current_directory
 
-If you need to set your own wkhtmltopdf path or want to change it during execution, you can call SetPath().
+If you need to set your own wkhtmltopdf and wkhtmltoimage path or want to change it during execution, you can call SetPath().
 
 # Usage
-See testfile ```wkhtmltopdf_test.go``` for more complex options, a common use case test is in ```simplesample_test.go``` 
 
+## wkhtml2pdf
+See testfile wkhtmltopdf_test.go for more complex options, a common use case test is in simplesample_test.go
 ```go
-package wkhtmltopdf
+package wkhtmlconverter
 
 import (
   "fmt"
@@ -112,12 +82,32 @@ func ExampleNewPDFGenerator() {
   // Output: Done
 }
 ```
-
 As mentioned before, you can provide one document from stdin, this is done by using a [PageReader](https://godoc.org/github.com/sxpsxp12/go-wkhtmlconverter#PageReader "GoDoc") object as input to AddPage. This is best constructed with  [NewPageReader](https://godoc.org/github.com/sxpsxp12/go-wkhtmlconverter#NewPageReader "GoDoc") and will accept any io.Reader so this can be used with files from disk (os.File) or memory (bytes.Buffer) etc.  
 A simple example snippet:
 ```go
 html := "<html>Hi</html>"
 pdfgen.AddPage(NewPageReader(strings.NewReader(html)))
+```
+
+## wkhtml2image
+
+See testfile wkhtmltoimage_test.go for more complex options
+
+```angular2html
+pImg, err := NewImageGenerator()
+if err != nil {
+    tb.Fatal(err)
+}
+pImage.Format.Set("png")
+pImage.Height.Set(100)
+pImage.Width.Set(100)
+pImage.Quality.Set(100)
+
+err = pImg.CreateFromFile("testdata/htmlsimple.html")
+if err != nil {
+    t.Fatal(err)
+}
+pImg.WriteFile("testdata/file_htmlsimple.png")
 ```
 
 # Saving to and loading from JSON
