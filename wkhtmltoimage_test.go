@@ -16,6 +16,7 @@ func newTestImageGenerator(tb testing.TB) *ImageGenerator {
 	pImage.Height.Set(100)
 	pImage.Width.Set(100)
 	pImage.Quality.Set(100)
+	pImage.DisableSmartWidth.Set(true)
 
 	return pImage
 }

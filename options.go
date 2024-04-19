@@ -531,6 +531,8 @@ type imageOptions struct {
 	CropW uintOption // Set width for cropping
 	CropX uintOption // Set x coordinate for cropping
 	CropY uintOption // Set y coordinate for cropping
+
+	DisableSmartWidth boolOption //配合--width使用，make it strict
 }
 
 func (gopt *imageOptions) Args() []string {
@@ -539,15 +541,16 @@ func (gopt *imageOptions) Args() []string {
 
 func newImageOptions() imageOptions {
 	return imageOptions{
-		Format:  stringOption{option: "format", value: "png"},
-		Height:  uintOption{option: "height"},
-		Width:   uintOption{option: "width"},
-		Quality: uintOption{option: "quality"},
-		Version: boolOption{option: "version"},
-		Quiet:   boolOption{option: "quiet"},
-		CropH:   uintOption{option: "crop-h"},
-		CropW:   uintOption{option: "crop-w"},
-		CropX:   uintOption{option: "crop-x"},
-		CropY:   uintOption{option: "crop-y"},
+		Format:            stringOption{option: "format", value: "png"},
+		Height:            uintOption{option: "height"},
+		Width:             uintOption{option: "width"},
+		Quality:           uintOption{option: "quality"},
+		Version:           boolOption{option: "version"},
+		Quiet:             boolOption{option: "quiet"},
+		CropH:             uintOption{option: "crop-h"},
+		CropW:             uintOption{option: "crop-w"},
+		CropX:             uintOption{option: "crop-x"},
+		CropY:             uintOption{option: "crop-y"},
+		DisableSmartWidth: boolOption{option: "disable-smart-width", value: false},
 	}
 }
